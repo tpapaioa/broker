@@ -1,4 +1,5 @@
 """Ansible Tower provider implementation."""
+
 from functools import cache, cached_property
 import inspect
 import json
@@ -7,7 +8,6 @@ from urllib import parse as url_parser
 import click
 from dynaconf import Validator
 from logzero import logger
-import yaml
 
 from broker import exceptions
 from broker.helpers import eval_filter, find_origin
@@ -20,6 +20,8 @@ except ImportError as err:
 
 from broker import helpers
 from broker.providers import Provider
+
+helpers.yaml.register_class(awxkit.utils.PseudoNamespace)
 
 
 class JobExecutionError(exceptions.ProviderError):
@@ -776,11 +778,3 @@ class AnsibleTower(Provider):
             source_vm=name,
             **broker_args,
         )
-
-
-def awxkit_representer(dumper, data):
-    """In order to resolve awxkit objects, a custom representer is needed."""
-    return dumper.represent_dict(dict(data))
-
-
-yaml.add_representer(awxkit.utils.PseudoNamespace, awxkit_representer)
