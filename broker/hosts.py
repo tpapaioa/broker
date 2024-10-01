@@ -144,7 +144,7 @@ class Host:
 
     def close(self):
         """Close the SSH connection to the host."""
-        if self._session is not None:
+        if getattr(self, "_session", None):
             self._session.disconnect()
         self._session = None
 
